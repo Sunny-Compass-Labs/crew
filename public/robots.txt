@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sunnycompasslabs.com/sitemap-index.xml
