@@ -1,0 +1,54 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About - Sunny Compass Labs" description="Learn about the crew behind Sunny Compass Labs and our mission to chart new territory.">
+  {/* Page header */}
+  <section class="bg-gradient-to-b from-ocean-navy to-cerulean py-24 px-4 text-center">
+    <h1 class="font-display text-5xl md:text-7xl text-gold mb-4 animate-sail-in">Our Story</h1>
+    <p class="text-sand/80 text-xl max-w-2xl mx-auto animate-fade-in-up animate-delay-1">
+      Every great voyage starts with a bold crew and a steady compass.
+    </p>
+  </section>
+
+  {/* Story section */}
+  <section class="py-20 px-4 bg-cream">
+    <div class="max-w-3xl mx-auto space-y-8">
+      <div class="animate-fade-in-up">
+        <h2 class="font-display text-3xl text-ocean-navy mb-4">Setting Sail</h2>
+        <p class="text-cerulean/80 leading-relaxed text-lg">
+          Sunny Compass Labs was born from a simple belief: the most valuable discoveries lie beyond the
+          well-charted waters of conventional thinking. Like the great explorers who once navigated by the stars,
+          we set our course toward the unknown, driven by curiosity and an unwavering commitment to innovation.
+        </p>
+      </div>
+
+      <div class="animate-fade-in-up animate-delay-1">
+        <h2 class="font-display text-3xl text-ocean-navy mb-4">Our Mission</h2>
+        <p class="text-cerulean/80 leading-relaxed text-lg">
+          We build tools and products that help people navigate complexity with confidence. In a world overflowing
+          with noise, we aim to be the compass that points toward clarity. Our mission is to craft solutions that
+          are as reliable as the North Star and as bold as a galleon at full sail.
+        </p>
+      </div>
+
+      <div class="animate-fade-in-up animate-delay-2">
+        <h2 class="font-display text-3xl text-ocean-navy mb-4">The Crew</h2>
+        <div class="bg-white rounded-xl border-2 border-sand p-8 text-center">
+          <div class="w-24 h-24 bg-gradient-to-br from-gold to-amber rounded-full mx-auto mb-4 flex items-center justify-center">
+            <svg class="w-12 h-12 text-ocean-navy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <h3 class="font-display text-2xl text-ocean-navy mb-1">Captain Placeholder</h3>
+          <p class="text-amber font-bold text-sm uppercase tracking-wider mb-3">Founder &amp; Navigator</p>
+          <p class="text-cerulean/70 text-sm max-w-md mx-auto">
+            A seasoned explorer with a passion for turning ambitious ideas into reality.
+            More details coming soon as our crew assembles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

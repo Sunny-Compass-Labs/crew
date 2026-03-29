@@ -1,0 +1,63 @@
+---
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/products', label: 'Products' },
+];
+---
+
+<nav class="sticky top-0 z-50 backdrop-blur-md bg-ocean-navy/90 border-b border-teal/20">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="font-display text-2xl text-gold hover:text-amber transition-colors">
+      Sunny Compass Labs
+    </a>
+
+    <!-- Mobile toggle -->
+    <input type="checkbox" id="nav-toggle" class="hidden peer" />
+    <label
+      for="nav-toggle"
+      class="md:hidden cursor-pointer text-cream p-2"
+      aria-label="Toggle navigation"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </label>
+
+    <!-- Desktop links -->
+    <ul class="hidden md:flex gap-6">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              'text-cream hover:text-gold transition-colors font-body text-lg',
+              { 'text-gold border-b-2 border-gold': currentPath === link.href },
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Mobile menu -->
+    <ul class="hidden peer-checked:flex flex-col absolute top-full left-0 right-0 bg-ocean-navy/95 backdrop-blur-md md:hidden border-b border-teal/20">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              'block px-6 py-3 text-cream hover:text-gold hover:bg-ocean-navy transition-colors',
+              { 'text-gold bg-ocean-navy': currentPath === link.href },
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>

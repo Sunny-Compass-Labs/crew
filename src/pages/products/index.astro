@@ -1,23 +1,27 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Hero from '@components/Hero.astro';
 import ProductCard from '@components/ProductCard.astro';
-import AboutPreview from '@components/AboutPreview.astro';
 
 const products = [
   { name: 'Compass Navigator', tagline: 'AI-powered wayfinding for complex decisions.', status: 'coming-soon' as const },
   { name: 'Tide Tracker', tagline: 'Real-time analytics that ride the wave of your data.', status: 'coming-soon' as const },
   { name: 'Harbor Suite', tagline: 'A safe port for your most critical workflows.', status: 'coming-soon' as const },
+  { name: 'Starboard Engine', tagline: 'High-performance compute for your heaviest workloads.', status: 'coming-soon' as const },
 ];
 ---
 
-<BaseLayout title="Sunny Compass Labs - Charting New Territory">
-  <Hero />
+<BaseLayout title="Products - Sunny Compass Labs" description="Explore the innovative products being built at Sunny Compass Labs.">
+  {/* Page header */}
+  <section class="bg-gradient-to-b from-ocean-navy to-cerulean py-24 px-4 text-center">
+    <h1 class="font-display text-5xl md:text-7xl text-gold mb-4 animate-sail-in">Our Fleet</h1>
+    <p class="text-sand/80 text-xl max-w-2xl mx-auto animate-fade-in-up animate-delay-1">
+      Products designed to navigate complexity and chart a course to clarity.
+    </p>
+  </section>
 
-  {/* Products Section */}
+  {/* Products grid */}
   <section class="py-20 px-4 bg-cream">
     <div class="max-w-6xl mx-auto">
-      <h2 class="font-display text-4xl md:text-5xl text-ocean-navy text-center mb-12">On the Horizon</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map((product, i) => (
           <div class:list={['animate-fade-in-up', `animate-delay-${i + 1}`]}>
@@ -27,6 +31,4 @@ const products = [
       </div>
     </div>
   </section>
-
-  <AboutPreview />
 </BaseLayout>

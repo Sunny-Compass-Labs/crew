@@ -1,0 +1,46 @@
+---
+---
+
+<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-ocean-navy via-cerulean to-teal overflow-hidden">
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+    <!-- Animated compass -->
+    <div class="flex justify-center mb-8">
+      <svg class="w-24 h-24 text-gold animate-compass-rotate" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="50" cy="50" r="45" stroke-width="1.5" />
+        <circle cx="50" cy="50" r="35" stroke-width="1" opacity="0.5" />
+        <circle cx="50" cy="50" r="4" fill="currentColor" />
+        <!-- Compass needle north -->
+        <polygon points="50,10 45,50 55,50" fill="#FF6B4A" opacity="0.9" stroke="none" />
+        <!-- Compass needle south -->
+        <polygon points="50,90 45,50 55,50" fill="currentColor" opacity="0.5" stroke="none" />
+        <!-- Cardinal points -->
+        <line x1="50" y1="5" x2="50" y2="15" stroke-width="2" />
+        <line x1="50" y1="85" x2="50" y2="95" stroke-width="1.5" />
+        <line x1="5" y1="50" x2="15" y2="50" stroke-width="1.5" />
+        <line x1="85" y1="50" x2="95" y2="50" stroke-width="1.5" />
+      </svg>
+    </div>
+
+    <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-gold mb-6 animate-sail-in">
+      Charting New Territory
+    </h1>
+
+    <p class="text-xl md:text-2xl text-sand/90 mb-10 max-w-2xl mx-auto animate-fade-in-up animate-delay-2">
+      We navigate the uncharted waters of innovation, discovering bold solutions where others see only open sea.
+    </p>
+
+    <a
+      href="/products"
+      class="inline-block bg-gold hover:bg-amber text-ocean-navy font-bold px-8 py-4 rounded-lg text-lg transition-all hover:scale-105 animate-fade-in-up animate-delay-3"
+    >
+      Explore Our Voyage
+    </a>
+  </div>
+
+  <!-- Wave SVG at bottom -->
+  <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+    <svg class="relative block w-[200%] h-20 animate-wave" viewBox="0 0 1200 80" preserveAspectRatio="none">
+      <path d="M0,40 C150,80 350,0 600,40 C850,80 1050,0 1200,40 L1200,80 L0,80 Z" fill="#FFF8F0" />
+    </svg>
+  </div>
+</section>
