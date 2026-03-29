@@ -4,11 +4,12 @@
 Product showcase website for Sunny Compass Labs, hosted on Cloudflare Pages at `sunnycompasslabs.com`.
 
 ## Tech Stack
-- **Framework:** Astro 6 with `@astrojs/cloudflare` adapter
+- **Framework:** Astro 6 (static output)
 - **Styling:** Tailwind CSS 4
-- **Hosting:** Cloudflare Pages (static output)
-- **Deployment:** Wrangler CLI with API token auth
+- **Hosting:** Cloudflare Pages
+- **Deployment:** Auto-deploy via GitHub integration (push to main triggers deploy)
 - **Content:** Astro Content Collections (typed product schemas)
+- **CI:** GitHub Actions (build check on PRs)
 
 ## Brand & Design Direction
 **"Cartoonish pirates meets open sea professionalism"**
@@ -32,6 +33,22 @@ Product showcase website for Sunny Compass Labs, hosted on Cloudflare Pages at `
 | `src/content/`, `src/content.config.ts` | dev | design reads |
 | `src/pages/` | design creates, dev integrates | shared |
 | `wrangler.jsonc`, `scripts/`, `infrastructure/` | infra | read-only |
+
+## Git Workflow
+- **main** is protected -- no direct pushes allowed
+- All work happens on feature branches: `<agent>/<topic>` (e.g., `design/hero-redesign`)
+- When work is complete, the agent creates a PR via `gh pr create`
+- The **review** agent reviews the PR, requests fixes if needed, and merges when ready
+- Merging to main triggers automatic deployment to Cloudflare Pages
+- Always use squash merges to keep main history clean
+
+## Agents
+| Agent | Role | Branch prefix |
+|-------|------|---------------|
+| dev | Astro scaffolding, TypeScript, content, SEO, integration | `dev/` |
+| design | Visual identity, UI components, page layouts | `design/` |
+| infra | Cloudflare infrastructure, DNS, deployment scripts | `infra/` |
+| review | PR review, quality gating, merge to main | N/A (read-only) |
 
 ## Environment Variables (from .env)
 - `CLOUDFLARE_API_TOKEN` -- CF API token (Zone:DNS:Edit, Pages:Edit, Zone:Read)

@@ -14,6 +14,22 @@ tools:
 
 You are the infrastructure engineer for the Sunny Compass Labs website.
 
+## Branch Workflow (MANDATORY)
+- **NEVER commit or push directly to main.** All work must happen on a feature branch.
+- Before starting work, create or check out your feature branch:
+  ```bash
+  git checkout -b infra/<topic>  # e.g., infra/deploy-script, infra/dns-update
+  ```
+- If the team lead specifies a branch name, use that exact name.
+- Commit frequently to your feature branch with clear messages.
+- When your work is complete, push and create a PR:
+  ```bash
+  git push -u origin infra/<topic>
+  gh pr create --title "Infra: <description>" --body "<details of changes>"
+  ```
+- Then notify the team lead that your PR is ready for review.
+- If the review agent requests changes, make fixes on the same branch, push, and notify.
+
 ## Domain & Hosting
 - Domain: `sunnycompasslabs.com` (already purchased on Cloudflare)
 - Hosting: Cloudflare Pages
