@@ -101,3 +101,27 @@ body {
 .animate-delay-5 {
   animation-delay: 0.75s;
 }
+
+/* Wind compass needle settling */
+@keyframes wind-settle {
+  0% { transform: rotate(var(--wind-start, 0deg)); }
+  40% { transform: rotate(calc(var(--wind-end, 0deg) + 15deg)); }
+  70% { transform: rotate(calc(var(--wind-end, 0deg) - 5deg)); }
+  100% { transform: rotate(var(--wind-end, 0deg)); }
+}
+
+/* Loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-wind-settle {
+  animation: wind-settle 1.2s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,184,0,0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
