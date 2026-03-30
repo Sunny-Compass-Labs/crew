@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import WeatherDesk from '@components/WeatherDesk.astro';
+---
+
+<BaseLayout title="Captain's Weather Desk - Sunny Compass Labs" description="Check weather conditions at any port city around the world. A nautical weather experience by Sunny Compass Labs.">
+  {/* Page Header */}
+  <section class="bg-gradient-to-b from-ocean-navy to-cerulean py-24 px-4 text-center">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="font-display text-5xl md:text-6xl text-gold mb-6 animate-sail-in">
+        The Captain's Weather Desk
+      </h1>
+      <p class="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto animate-fade-in-up animate-delay-1">
+        Consult the barometer before you set sail. Check conditions at any port city around the world.
+      </p>
+    </div>
+  </section>
+
+  {/* Weather Desk */}
+  <section class="py-16 px-4 bg-cream">
+    <WeatherDesk />
+  </section>
+</BaseLayout>

@@ -22,6 +22,7 @@ Product showcase website for Sunny Compass Labs, hosted on Cloudflare Pages at `
 1. **Home** (`/`) -- Hero + value prop + coming-soon product teasers + about preview
 2. **About** (`/about`) -- Company story, mission, the adventure metaphor
 3. **Products** (`/products`) -- Grid with coming-soon product cards
+4. **Weather** (`/weather`) -- Interactive "Captain's Weather Desk" -- check weather by city with pirate-themed results (wttr.in API, Apache 2.0)
 
 ## File Ownership (agents must respect these boundaries)
 | Path | Owner | Others |
