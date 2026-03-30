@@ -1,5 +1,479 @@
 ---
 ---
-<div class="max-w-2xl mx-auto text-center text-ocean-navy">
-  <p>Weather desk loading...</p>
+
+<div id="weather-desk" class="max-w-2xl mx-auto bg-white rounded-xl border-2 border-sand shadow-lg overflow-hidden">
+
+  <!-- Header -->
+  <div class="bg-ocean-navy px-6 py-5 text-center">
+    <h2 class="font-display text-3xl text-gold">Captain's Weather Desk</h2>
+    <p class="text-sand/70 text-sm mt-1">Check conditions before ye set sail</p>
+  </div>
+
+  <!-- Input Section -->
+  <div class="px-6 pt-6 pb-4">
+    <label for="city-input" class="font-display text-xl text-ocean-navy block mb-2">Port of Call</label>
+    <div class="flex gap-3">
+      <input
+        type="text"
+        id="city-input"
+        placeholder="Enter a port city..."
+        class="flex-1 bg-sand/30 border border-sand rounded-lg px-4 py-2.5 text-ocean-navy placeholder-ocean-navy/40 focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold transition-colors"
+      />
+      <button
+        id="fetch-weather-btn"
+        class="bg-gold hover:bg-amber text-ocean-navy font-bold px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap cursor-pointer"
+      >
+        Check Conditions
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div id="weather-error" class="hidden px-6 pb-4">
+    <div class="bg-coral/10 border border-coral/30 rounded-lg px-4 py-3 text-coral font-body text-sm flex items-center gap-2">
+      <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 3h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+      </svg>
+      <span id="error-message"></span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div id="weather-loading" class="hidden px-6 pb-6">
+    <div class="space-y-4">
+      <div class="h-8 rounded-lg animate-shimmer"></div>
+      <div class="h-24 rounded-lg animate-shimmer"></div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="h-20 rounded-lg animate-shimmer"></div>
+        <div class="h-20 rounded-lg animate-shimmer"></div>
+        <div class="h-20 rounded-lg animate-shimmer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div id="weather-results" class="hidden px-6 pb-6">
+
+    <!-- City Name -->
+    <div class="text-center mb-4">
+      <h3 id="result-city" class="font-display text-2xl text-ocean-navy"></h3>
+    </div>
+
+    <!-- Weather Icon + Description -->
+    <div class="flex flex-col items-center mb-5">
+      <div id="weather-icon-container" class="w-24 h-24 mb-3"></div>
+      <p id="weather-desc" class="text-lg font-body text-ocean-navy/80 font-semibold"></p>
+    </div>
+
+    <!-- Temperature -->
+    <div class="text-center mb-2">
+      <div class="flex items-center justify-center gap-3">
+        <span id="temp-display" class="font-display text-5xl text-ocean-navy"></span>
+        <div class="flex flex-col gap-1">
+          <button id="toggle-c" class="text-xs font-bold px-2 py-0.5 rounded bg-gold text-ocean-navy cursor-pointer">&deg;C</button>
+          <button id="toggle-f" class="text-xs font-bold px-2 py-0.5 rounded bg-sand/50 text-ocean-navy/60 hover:bg-sand cursor-pointer">&deg;F</button>
+        </div>
+      </div>
+      <p id="feels-like" class="text-sm text-ocean-navy/50 mt-1"></p>
+    </div>
+
+    <!-- Pirate condition text -->
+    <p id="pirate-condition" class="text-center italic text-ocean-navy/70 font-body mb-6 px-4"></p>
+
+    <!-- Detail Cards -->
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <!-- Wind -->
+      <div class="bg-ocean-navy/5 rounded-lg p-3 text-center">
+        <div class="flex justify-center mb-2">
+          <div id="wind-compass" class="w-12 h-12">
+            <svg viewBox="0 0 48 48" class="w-full h-full">
+              <circle cx="24" cy="24" r="22" fill="none" stroke="#0B1D3A" stroke-width="1" opacity="0.2" />
+              <circle cx="24" cy="24" r="18" fill="none" stroke="#0B1D3A" stroke-width="0.5" opacity="0.15" />
+              <!-- Cardinal marks -->
+              <text x="24" y="7" text-anchor="middle" fill="#0B1D3A" font-size="5" font-weight="bold" opacity="0.5">N</text>
+              <text x="24" y="46" text-anchor="middle" fill="#0B1D3A" font-size="5" font-weight="bold" opacity="0.5">S</text>
+              <text x="4" y="26" text-anchor="middle" fill="#0B1D3A" font-size="5" font-weight="bold" opacity="0.5">W</text>
+              <text x="44" y="26" text-anchor="middle" fill="#0B1D3A" font-size="5" font-weight="bold" opacity="0.5">E</text>
+              <!-- Needle group - rotated by JS -->
+              <g id="compass-needle" class="origin-center" style="transform-origin: 24px 24px;">
+                <polygon points="24,6 22,24 26,24" fill="#FFB800" />
+                <polygon points="24,42 22,24 26,24" fill="#0B1D3A" opacity="0.3" />
+                <circle cx="24" cy="24" r="2.5" fill="#FFB800" stroke="#0B1D3A" stroke-width="0.5" />
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p class="text-xs text-ocean-navy/50 uppercase tracking-wider mb-1">Wind</p>
+        <p id="wind-speed" class="font-bold text-ocean-navy text-sm"></p>
+        <p id="wind-beaufort" class="text-xs text-ocean-navy/50"></p>
+        <p id="wind-dir-label" class="text-xs text-ocean-navy/40"></p>
+      </div>
+
+      <!-- Humidity -->
+      <div class="bg-ocean-navy/5 rounded-lg p-3 text-center">
+        <div class="flex justify-center mb-2">
+          <svg class="w-12 h-12" viewBox="0 0 48 48" fill="none">
+            <path d="M24 6 C24 6 10 22 10 30 C10 38 16.3 44 24 44 C31.7 44 38 38 38 30 C38 22 24 6 24 6Z" fill="#4FC0D0" opacity="0.15" stroke="#4FC0D0" stroke-width="1.5" />
+            <path d="M20 32 Q24 28 28 32" fill="none" stroke="#4FC0D0" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M18 36 Q24 32 30 36" fill="none" stroke="#4FC0D0" stroke-width="1" stroke-linecap="round" opacity="0.5" />
+          </svg>
+        </div>
+        <p class="text-xs text-ocean-navy/50 uppercase tracking-wider mb-1">Humidity</p>
+        <p id="humidity-val" class="font-bold text-ocean-navy text-sm"></p>
+      </div>
+
+      <!-- Visibility -->
+      <div class="bg-ocean-navy/5 rounded-lg p-3 text-center">
+        <div class="flex justify-center mb-2">
+          <svg class="w-12 h-12" viewBox="0 0 48 48" fill="none">
+            <path d="M4 24 C4 24 12 12 24 12 C36 12 44 24 44 24 C44 24 36 36 24 36 C12 36 4 24 4 24Z" fill="#FFB800" opacity="0.1" stroke="#0B1D3A" stroke-width="1.5" />
+            <circle cx="24" cy="24" r="6" fill="none" stroke="#0B1D3A" stroke-width="1.5" opacity="0.5" />
+            <circle cx="24" cy="24" r="2" fill="#0B1D3A" opacity="0.4" />
+          </svg>
+        </div>
+        <p class="text-xs text-ocean-navy/50 uppercase tracking-wider mb-1">Visibility</p>
+        <p id="visibility-val" class="font-bold text-ocean-navy text-sm"></p>
+      </div>
+    </div>
+
+    <!-- Sailing Advisory -->
+    <div id="sailing-advisory" class="rounded-lg px-4 py-3 border-2 mb-4">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 20 L12 4 L21 20 Z" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div>
+          <p id="advisory-title" class="font-bold text-sm"></p>
+          <p id="advisory-detail" class="text-xs opacity-70"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attribution -->
+    <p class="text-center text-xs text-ocean-navy/40">
+      Weather data from <a href="https://github.com/chubin/wttr.in" target="_blank" rel="noopener noreferrer" class="underline hover:text-ocean-navy/60 transition-colors">wttr.in</a> (Apache 2.0)
+    </p>
+  </div>
 </div>
+
+<!-- Hidden template div for Tailwind CSS 4 dynamic class scanning -->
+<div class="hidden">
+  <div class="bg-teal/20 border-teal text-teal"></div>
+  <div class="bg-gold/20 border-amber text-amber"></div>
+  <div class="bg-coral/20 border-coral text-coral"></div>
+</div>
+
+<script>
+document.addEventListener('astro:page-load', () => {
+  const cityInput = document.getElementById('city-input');
+  const fetchBtn = document.getElementById('fetch-weather-btn');
+  const errorDiv = document.getElementById('weather-error');
+  const errorMsg = document.getElementById('error-message');
+  const loadingDiv = document.getElementById('weather-loading');
+  const resultsDiv = document.getElementById('weather-results');
+  const resultCity = document.getElementById('result-city');
+  const weatherIconContainer = document.getElementById('weather-icon-container');
+  const weatherDesc = document.getElementById('weather-desc');
+  const tempDisplay = document.getElementById('temp-display');
+  const feelsLike = document.getElementById('feels-like');
+  const pirateCondition = document.getElementById('pirate-condition');
+  const windSpeed = document.getElementById('wind-speed');
+  const windBeaufort = document.getElementById('wind-beaufort');
+  const windDirLabel = document.getElementById('wind-dir-label');
+  const compassNeedle = document.getElementById('compass-needle');
+  const humidityVal = document.getElementById('humidity-val');
+  const visibilityVal = document.getElementById('visibility-val');
+  const sailingAdvisory = document.getElementById('sailing-advisory');
+  const advisoryTitle = document.getElementById('advisory-title');
+  const advisoryDetail = document.getElementById('advisory-detail');
+  const toggleC = document.getElementById('toggle-c');
+  const toggleF = document.getElementById('toggle-f');
+
+  if (!cityInput || !fetchBtn) return;
+
+  let currentData = null;
+  let useCelsius = true;
+
+  // Temperature toggle
+  toggleC?.addEventListener('click', () => {
+    useCelsius = true;
+    toggleC.className = 'text-xs font-bold px-2 py-0.5 rounded bg-gold text-ocean-navy cursor-pointer';
+    toggleF.className = 'text-xs font-bold px-2 py-0.5 rounded bg-sand/50 text-ocean-navy/60 hover:bg-sand cursor-pointer';
+    if (currentData) updateTemperature();
+  });
+
+  toggleF?.addEventListener('click', () => {
+    useCelsius = false;
+    toggleF.className = 'text-xs font-bold px-2 py-0.5 rounded bg-gold text-ocean-navy cursor-pointer';
+    toggleC.className = 'text-xs font-bold px-2 py-0.5 rounded bg-sand/50 text-ocean-navy/60 hover:bg-sand cursor-pointer';
+    if (currentData) updateTemperature();
+  });
+
+  function updateTemperature() {
+    if (!currentData) return;
+    const temp = useCelsius ? currentData.temp_C : currentData.temp_F;
+    const unit = useCelsius ? '\u00B0C' : '\u00B0F';
+    const feelsTemp = useCelsius ? currentData.FeelsLikeC : currentData.FeelsLikeF;
+    tempDisplay.textContent = `${temp}${unit}`;
+    feelsLike.textContent = `Feels like ${feelsTemp}${unit}`;
+  }
+
+  function showError(msg) {
+    errorDiv.classList.remove('hidden');
+    errorMsg.textContent = msg;
+    loadingDiv.classList.add('hidden');
+    resultsDiv.classList.add('hidden');
+  }
+
+  function hideError() {
+    errorDiv.classList.add('hidden');
+  }
+
+  function showLoading() {
+    loadingDiv.classList.remove('hidden');
+    resultsDiv.classList.add('hidden');
+    hideError();
+  }
+
+  function hideLoading() {
+    loadingDiv.classList.add('hidden');
+  }
+
+  function getBeaufort(knots) {
+    if (knots < 1) return 'Calm';
+    if (knots <= 3) return 'Light Air';
+    if (knots <= 6) return 'Light Breeze';
+    if (knots <= 10) return 'Gentle Breeze';
+    if (knots <= 16) return 'Moderate Breeze';
+    if (knots <= 21) return 'Fresh Breeze';
+    if (knots <= 27) return 'Strong Breeze';
+    if (knots <= 33) return 'Near Gale';
+    if (knots <= 40) return 'Gale';
+    if (knots <= 47) return 'Strong Gale';
+    if (knots <= 55) return 'Storm';
+    if (knots <= 63) return 'Violent Storm';
+    return 'Hurricane';
+  }
+
+  function getPirateTempText(tempC) {
+    const t = parseFloat(tempC);
+    if (t < 0) return 'Frozen rigging weather \u2014 the sea itself turns to ice.';
+    if (t < 10) return 'Biting cold on the quarterdeck. Bundle up, sailor.';
+    if (t < 20) return 'A crisp breeze carries the scent of salt and adventure.';
+    if (t < 30) return "Warm and pleasant \u2014 the crew's spirits are high.";
+    return 'Sweltering heat below deck. The tar melts in the seams.';
+  }
+
+  function getPirateWeatherText(code) {
+    const c = parseInt(code);
+    if (c === 113) return 'Clear skies and calm waters ahead, Captain.';
+    if (c === 116) return 'Scattered clouds drift lazily across the sky.';
+    if (c === 119 || c === 122) return 'Heavy clouds blanket the sky like a grey sail.';
+    if ([176,263,266,293,296,299,302,305,308,353,356,359].includes(c))
+      return 'Rain lashes the deck. Keep the powder dry!';
+    if ([200,386,389,392,395].includes(c))
+      return 'Thunder rolls across the deep! Seek shelter!';
+    if ([179,182,185,227,230,323,326,329,332,335,338,368,371,374,377].includes(c))
+      return 'Snow falls like white ash from a distant cannon.';
+    if ([143,248,260].includes(c))
+      return 'A thick fog rolls in. Sound the foghorn!';
+    return 'Strange weather on the horizon, Captain.';
+  }
+
+  function getWeatherIcon(code) {
+    const c = parseInt(code);
+    if (c === 113) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <circle cx="48" cy="48" r="18" fill="#FFB800" opacity="0.9"/>
+        <g stroke="#FFB800" stroke-width="3" stroke-linecap="round">
+          <line x1="48" y1="8" x2="48" y2="20"/><line x1="48" y1="76" x2="48" y2="88"/>
+          <line x1="8" y1="48" x2="20" y2="48"/><line x1="76" y1="48" x2="88" y2="48"/>
+          <line x1="19.7" y1="19.7" x2="28.2" y2="28.2"/><line x1="67.8" y1="67.8" x2="76.3" y2="76.3"/>
+          <line x1="19.7" y1="76.3" x2="28.2" y2="67.8"/><line x1="67.8" y1="28.2" x2="76.3" y2="19.7"/>
+        </g>
+      </svg>`;
+    }
+    if (c === 116) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <circle cx="58" cy="32" r="14" fill="#FFB800" opacity="0.8"/>
+        <g stroke="#FFB800" stroke-width="2.5" stroke-linecap="round" opacity="0.6">
+          <line x1="58" y1="10" x2="58" y2="16"/><line x1="76" y1="32" x2="82" y2="32"/>
+          <line x1="72" y1="18" x2="76" y2="14"/><line x1="72" y1="46" x2="76" y2="50"/>
+        </g>
+        <path d="M26 72 Q26 56 40 56 Q42 46 54 46 Q66 46 68 56 L70 56 Q80 56 80 66 Q80 72 74 72 Z" fill="#0B1D3A" opacity="0.15" stroke="#0B1D3A" stroke-width="1.5"/>
+      </svg>`;
+    }
+    if (c === 119 || c === 122) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <path d="M20 68 Q20 50 36 50 Q38 38 52 38 Q66 38 68 50 L72 50 Q84 50 84 62 Q84 68 76 68 Z" fill="#0B1D3A" opacity="0.15" stroke="#0B1D3A" stroke-width="1.5"/>
+        <path d="M12 80 Q12 66 26 66 Q28 56 40 56 Q52 56 54 66 L57 66 Q66 66 66 74 Q66 80 60 80 Z" fill="#0B1D3A" opacity="0.2" stroke="#0B1D3A" stroke-width="1.5"/>
+      </svg>`;
+    }
+    if ([176,263,266,293,296,299,302,305,308,353,356,359].includes(c)) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <path d="M20 52 Q20 36 36 36 Q38 26 52 26 Q66 26 68 36 L72 36 Q84 36 84 48 Q84 52 76 52 Z" fill="#0B1D3A" opacity="0.15" stroke="#0B1D3A" stroke-width="1.5"/>
+        <g stroke="#4FC0D0" stroke-width="2" stroke-linecap="round" opacity="0.7">
+          <line x1="32" y1="60" x2="28" y2="72"/><line x1="44" y1="60" x2="40" y2="76"/>
+          <line x1="56" y1="60" x2="52" y2="72"/><line x1="68" y1="60" x2="64" y2="76"/>
+        </g>
+        <path d="M22 82 Q30 78 38 82 Q46 86 54 82" fill="none" stroke="#4FC0D0" stroke-width="1.5" opacity="0.4"/>
+      </svg>`;
+    }
+    if ([200,386,389,392,395].includes(c)) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <path d="M18 48 Q18 32 34 32 Q36 22 50 22 Q64 22 66 32 L70 32 Q82 32 82 44 Q82 48 74 48 Z" fill="#0B1D3A" opacity="0.2" stroke="#0B1D3A" stroke-width="1.5"/>
+        <polygon points="52,50 42,68 50,68 44,86 62,62 52,62 58,50" fill="#FFB800" stroke="#E8950A" stroke-width="1"/>
+      </svg>`;
+    }
+    if ([179,182,185,227,230,323,326,329,332,335,338,368,371,374,377].includes(c)) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <path d="M20 50 Q20 34 36 34 Q38 24 52 24 Q66 24 68 34 L72 34 Q84 34 84 46 Q84 50 76 50 Z" fill="#0B1D3A" opacity="0.15" stroke="#0B1D3A" stroke-width="1.5"/>
+        <g fill="#4FC0D0" opacity="0.6">
+          <circle cx="32" cy="62" r="3"/><circle cx="48" cy="58" r="2.5"/><circle cx="64" cy="62" r="3"/>
+          <circle cx="40" cy="74" r="2.5"/><circle cx="56" cy="74" r="3"/><circle cx="72" cy="72" r="2"/>
+          <circle cx="28" cy="80" r="2"/><circle cx="48" cy="84" r="2.5"/>
+        </g>
+      </svg>`;
+    }
+    if ([143,248,260].includes(c)) {
+      return `<svg viewBox="0 0 96 96" class="w-full h-full">
+        <g stroke="#0B1D3A" stroke-width="2.5" stroke-linecap="round" opacity="0.25">
+          <path d="M16 32 Q32 26 48 32 Q64 38 80 32" fill="none"/>
+          <path d="M16 46 Q32 40 48 46 Q64 52 80 46" fill="none"/>
+          <path d="M16 60 Q32 54 48 60 Q64 66 80 60" fill="none"/>
+          <path d="M16 74 Q32 68 48 74 Q64 80 80 74" fill="none"/>
+        </g>
+      </svg>`;
+    }
+    return `<svg viewBox="0 0 96 96" class="w-full h-full">
+      <path d="M20 68 Q20 50 36 50 Q38 38 52 38 Q66 38 68 50 L72 50 Q84 50 84 62 Q84 68 76 68 Z" fill="#0B1D3A" opacity="0.15" stroke="#0B1D3A" stroke-width="1.5"/>
+    </svg>`;
+  }
+
+  function getSailingAdvisory(knots, weatherCode) {
+    const c = parseInt(weatherCode);
+    const stormCodes = [200, 386, 389, 392, 395];
+    const rainCodes = [176,263,266,293,296,299,302,305,308,353,356,359];
+
+    if (knots > 33 || stormCodes.includes(c)) {
+      return {
+        level: 'danger',
+        title: 'Not recommended for open water',
+        detail: 'Dangerous conditions ahead. Stay in port, Captain.',
+        classes: 'bg-coral/20 border-coral text-coral'
+      };
+    }
+    if (knots >= 22 || rainCodes.includes(c)) {
+      return {
+        level: 'caution',
+        title: 'Proceed with caution',
+        detail: 'Rough conditions possible. Reef the sails and hold fast.',
+        classes: 'bg-gold/20 border-amber text-amber'
+      };
+    }
+    return {
+      level: 'fair',
+      title: 'Fair sailing conditions',
+      detail: 'The sea beckons. Hoist the colors and set sail!',
+      classes: 'bg-teal/20 border-teal text-teal'
+    };
+  }
+
+  async function fetchWeather() {
+    const city = cityInput.value.trim();
+    if (!city) {
+      showError('Enter a port city, Captain!');
+      return;
+    }
+
+    hideError();
+    showLoading();
+
+    try {
+      const response = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          showError('No port by that name in our charts. Try another?');
+        } else {
+          showError("The carrier pigeon didn't make it. Check your connection.");
+        }
+        hideLoading();
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!data.current_condition || !data.current_condition[0]) {
+        showError('No port by that name in our charts. Try another?');
+        hideLoading();
+        return;
+      }
+
+      const condition = data.current_condition[0];
+      currentData = condition;
+
+      // City name from nearest_area
+      const area = data.nearest_area?.[0];
+      const cityName = area?.areaName?.[0]?.value || city;
+      const country = area?.country?.[0]?.value || '';
+      resultCity.textContent = country ? `${cityName}, ${country}` : cityName;
+
+      // Weather description and icon
+      const weatherCode = condition.weatherCode;
+      const desc = condition.weatherDesc?.[0]?.value || 'Unknown';
+      weatherDesc.textContent = desc;
+      weatherIconContainer.innerHTML = getWeatherIcon(weatherCode);
+
+      // Temperature
+      updateTemperature();
+
+      // Pirate condition text
+      const weatherText = getPirateWeatherText(weatherCode);
+      const tempText = getPirateTempText(condition.temp_C);
+      pirateCondition.textContent = `${weatherText} ${tempText}`;
+
+      // Wind
+      const windKmph = parseFloat(condition.windspeedKmph) || 0;
+      const knots = Math.round(windKmph * 0.539957);
+      const windDeg = parseFloat(condition.winddirDegree) || 0;
+      const windDir16 = condition.winddir16Point || '';
+      windSpeed.textContent = `${knots} knots`;
+      windBeaufort.textContent = getBeaufort(knots);
+      windDirLabel.textContent = windDir16;
+
+      // Animate compass needle
+      if (compassNeedle) {
+        compassNeedle.style.setProperty('--wind-start', '0deg');
+        compassNeedle.style.setProperty('--wind-end', `${windDeg}deg`);
+        compassNeedle.classList.remove('animate-wind-settle');
+        void compassNeedle.offsetWidth;
+        compassNeedle.classList.add('animate-wind-settle');
+      }
+
+      // Humidity
+      humidityVal.textContent = `${condition.humidity}%`;
+
+      // Visibility
+      visibilityVal.textContent = `${condition.visibility} km`;
+
+      // Sailing Advisory
+      const advisory = getSailingAdvisory(knots, weatherCode);
+      sailingAdvisory.className = `rounded-lg px-4 py-3 border-2 mb-4 ${advisory.classes}`;
+      advisoryTitle.textContent = advisory.title;
+      advisoryDetail.textContent = advisory.detail;
+
+      hideLoading();
+      resultsDiv.classList.remove('hidden');
+
+    } catch (err) {
+      hideLoading();
+      showError("The carrier pigeon didn't make it. Check your connection.");
+    }
+  }
+
+  fetchBtn.addEventListener('click', fetchWeather);
+  cityInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') fetchWeather();
+  });
+});
+</script>
