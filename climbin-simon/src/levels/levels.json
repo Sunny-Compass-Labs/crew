@@ -1,0 +1,12 @@
+{
+	"levels": [
+		{
+			"id": "level_001",
+			"name": "Throttle",
+			"scene": "res://src/levels/level_001.tscn",
+			"skill": "gas and brake",
+			"par_time": 20,
+			"twist": "one gentle hill that punishes holding full throttle"
+		}
+	]
+}

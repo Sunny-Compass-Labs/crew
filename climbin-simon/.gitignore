@@ -1,0 +1,9 @@
+# Godot
+.godot/
+
+# Build artifacts
+build/
+android/
+
+# OS noise
+.DS_Store
