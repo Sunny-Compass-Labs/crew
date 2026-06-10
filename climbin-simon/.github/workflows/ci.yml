@@ -1,0 +1,45 @@
+name: CI
+
+# PR gate: the project must import, every script must compile, every level
+# must load, and the game must boot headless. Fast on purpose -- the full APK
+# build happens on merge (build.yml).
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  GODOT_VERSION: "4.4.1"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-bin-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip -d ~/godot-bin
+          mv ~/godot-bin/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot-bin/godot
+
+      - name: Import project
+        run: ~/godot-bin/godot --headless --path . --import
+
+      - name: Smoke test
+        run: ~/godot-bin/godot --headless --path . --script tests/smoke.gd
+
+      - name: Boot check
+        run: timeout 60 ~/godot-bin/godot --headless --path . --quit-after 120
