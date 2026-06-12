@@ -7,6 +7,9 @@
 ## The founder (design everything around this)
 - Sole human. Under 5 hours/week, mostly evenings, mostly phone or short
   laptop sessions. Playtests nightly builds on an Android phone.
+- Reference test device: Samsung Galaxy S23 (SM-S911U) — Snapdragon 8 Gen 2,
+  2340×1080, 120 Hz display. Performance is not the bottleneck on this phone;
+  GL Compatibility renderer still targets older devices.
 - Some coding experience, zero gamedev experience: explain an engine concept
   the first time it comes up, then stop explaining.
 - His job: vision, taste, decisions, playtesting. Our job: everything else.
